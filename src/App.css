@@ -1,38 +1,100 @@
-.App {
-  text-align: center;
+.container_1 {
+  width: auto;
+  height: auto;
+  padding: 12px;
+  position: relative;
+  margin-left: 14%;
+
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.box {
+  padding: 20px;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-left: 30px;
+  margin-right: -30px;
+}
+
+.layout {
+  display: flex;
+  flex-wrap: nowrap;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+
 }
 
-.App-link {
-  color: #61dafb;
+#profile {
+  width: 35%;
+  height: auto;
+  background-color: #f1cc84;
+  margin: 20px;
+  border-radius: 50px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+#library {
+  width: 65%;
+  height: auto;
+  background-color: #f5d69d;
+  border-radius: 30px;
+  margin: 20px;
+  margin-left: 40px;
+}
+
+#img_box {
+  padding: 20px;
+  border-bottom: thick double #32a1ce;
+}
+
+#text {
+  text-align: center;
+  text-shadow: 3px;
+  font-size: 15px;
+}
+
+#button {
+  background: none;
+  border: none;
+  color: aliceblue;
+  width: auto;
+  margin-left: 20px;
+  text-align: center;
+  text-shadow: 3px;
+  font-size: 22px;
+  padding: 14px;
+}
+.text_input {
+  color: aliceblue;
+  width: 150px;
+  margin-left: 32px;
+  text-align: center;
+  text-shadow: 3px;
+  font-size: 16px;
+}
+.card {
+  color: #fff;
+  width: 350px;
+  border-radius: 10px;
+  background: linear-gradient(145deg, #fdce68, #fede9a);
+  border: #fdc957;
+}
+
+.TabList {
+  width: 14%;
+  height: 100%;
+  background: #263238;
+  color: aliceblue;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  position: fixed;
+}
+
+@media screen and (max-width: 900px) {
+  .box {
+    margin-left: 8%;
   }
-  to {
-    transform: rotate(360deg);
+
+  .TabList {
+    width: 25%;
   }
 }
