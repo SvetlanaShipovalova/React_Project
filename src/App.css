@@ -95,6 +95,18 @@
   position: fixed;
 }
 
+#filter {
+  z-index: 1;
+  top: 160px;
+  left: 10px;
+  position: fixed;
+  width: 200px;
+  background-color: #263238;
+  color: aliceblue;
+  text-align: center;
+
+}
+
 .card_book {
   display: grid;
   grid-template-columns: repeat(4, auto);

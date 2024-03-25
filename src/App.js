@@ -6,6 +6,9 @@ import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
 import * as month from './img/12_month.jpg';
+import { FloatingLabel } from "react-bootstrap";
+import Form from 'react-bootstrap/Form';
+import InputGroup from 'react-bootstrap/InputGroup';
 
 //Основные функции приложения
 
@@ -36,8 +39,7 @@ export default function Gallery() {
             <div>
                 <div className="TabList">
                     <h1 type="button" style={{ textAlign: 'center', marginTop: "20px" }} onClick={refreshPage}>Сказочник</h1>
-                    <button id='button' onClick={handleClick}>Мой профиль</button>
-
+                    <br /><button id='button' onClick={handleClick}>Мой профиль</button>
                 </div>
                 {isShown && <section><Content /></section>
                 }
@@ -47,22 +49,33 @@ export default function Gallery() {
     );
 }
 
-//поиск нужной книги
+//поиск нужной книги и фильтрация по жанру
 function Search() {
     const [searchTerm, setSearchTerm] = useState('');
+    const [filterTerm, setFilterTerm] = useState('');
+
     const searchCards = list.filter(function (item) {
-        return item.title.includes(searchTerm);
+        return filterTerm != "" ? item.title.includes(searchTerm) && item.genre == filterTerm : item.title.includes(searchTerm);
     });
+    
+    const genres = Array.from(new Set(list.map(function (item) {
+        return item.genre;
+    })));
+
     const handleChange = (event) => {
         setSearchTerm(event.target.value);
     }
+    const filterChange = (event) => {
+        setFilterTerm(event.target.value);
+    }
     return (
         <div>
-            <input class="w-65 m-2 alert alert-dark mt-3" id="search" type='text' onChange={handleChange}></input>
-            <p>
-                <strong>{searchTerm}</strong>
-            </p>
-            <ListBooks list={searchCards} />
+            <Form.Select aria-label="Выберите жанр:" onChange={filterChange} class="btn" id="filter">
+                <option>Выберите жанр</option>
+                <ListGenres list={genres} />
+            </Form.Select>
+            <input placeholder="Поиск по библиотеке:" class="w-65 m-2 alert alert-dark mt-3" id="search" type='text' onChange={handleChange}></input>
+            <br /><br /><ListBooks list={searchCards} />
         </div>
     )
 }
@@ -85,6 +98,7 @@ const list = [
         count_pages: 3,
         id: 1,
         annotation: "Каждый месяц идёт друг за другом строго по порядку. Так было всегда. Но однажды этот закон природы был нарушен – среди зимы наступила весна и расцвели подснежники. Случилось это в сказке, которую написал для детей Маршак. Основой сюжета сказки стали народные славянские сказания о братьях-месяцах, встречающихся у костра новогодней ночью… ",
+        genre: "Русская сказка",
     },
     {
         title: 'Цветик-семицветик',
@@ -93,6 +107,7 @@ const list = [
         count_pages: 4,
         id: 1,
         annotation: "Про девочку, которая получила в подарок семь желаний! И очень глупо их растратила. И только последнее желание оказалось добрым и полезным. Очень мудрая история, пригодится не только детям, но и взрослым.",
+        genre: "Русская сказка",
     },
     {
         title: 'Кот в сапогах',
@@ -101,8 +116,19 @@ const list = [
         count_pages: 4,
         id: 1,
         annotation: "Представьте себе, что почувствовал Жак, когда узнал, что его старшие братья получили в наследство мельницу и осла, а он - всего лишь кота. Вот только это необычный кот. И у кота есть гениальный план. Вместе с Жаком им предстоит пройти испытания, раскрывая тайны и отгадывая загадки, чтобы в конце получить долгожданную награду.",
+        genre: "Французская сказка",
     },
 ];
+
+const ListGenres = (props) => {
+    return (
+        <>
+            {props.list.map(function (item) {
+                return <option>{item}</option>
+            })}
+        </>
+    );
+}
 //Библиотека
 const ListBooks = (props) => {
     return (
@@ -119,7 +145,10 @@ const ListBooks = (props) => {
                                         </svg>
                                     </div>
                                     <div class="book2"><ListGroup.Item class="book2"><h4 style={{ fontWeight: "bold" }}>Аннотация:</h4>{item.annotation}</ListGroup.Item> </div>
-                                    <div class="book3"><ListGroup.Item class="book3"><h4 style={{ fontWeight: "bold" }}>Автор:</h4><h5>{item.author}</h5></ListGroup.Item></div>
+                                    <div class="book3"><ListGroup.Item class="book3"><h4 style={{ fontWeight: "bold" }}>Автор:</h4><h5>{item.author}</h5></ListGroup.Item>
+                                        <p style={{ borderStyle: "solid", borderLeft: 0, borderBottom: 0, borderRight: 0 }}>{item.genre}</p>
+
+                                    </div>
                                     <div class="book4"><ListGroup.Item class="book4">
                                         <svg style={{ display: "block", margin: "auto", color: "#f26362" }} xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
                                             <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z" />
