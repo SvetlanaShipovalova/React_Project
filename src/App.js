@@ -1,6 +1,7 @@
 import React from "react";
 import './App.css';
 import { useState } from 'react';
+import {useEffect} from 'react';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
@@ -51,8 +52,21 @@ export default function Gallery() {
 
 //поиск нужной книги и фильтрация по жанру
 function Search() {
+	
+	const useStorageState = (initState) => {
+		
+		const [loginTerm, setLoginTerm] = useState(localStorage.getItem("login") || initState);
+		
+		useEffect(() => {
+		localStorage.setItem("login", loginTerm);
+		},[loginTerm]);
+		return [loginTerm, setLoginTerm]
+		
+	}
+	
     const [searchTerm, setSearchTerm] = useState('');
     const [filterTerm, setFilterTerm] = useState('');
+	const [loginTerm, setLoginTerm] = useStorageState('default');
 
     const searchCards = list.filter(function (item) {
         return filterTerm != "" ? item.title.includes(searchTerm) && item.genre == filterTerm : item.title.includes(searchTerm);
@@ -62,23 +76,31 @@ function Search() {
         return item.genre;
     })));
 
-    const handleChange = (event) => {
+    const searchChange = (event) => {
         setSearchTerm(event.target.value);
+    }
+	const loginChange = (event) => {
+        setLoginTerm(event.target.value);
     }
     const filterChange = (event) => {
         setFilterTerm(event.target.value);
     }
     return (
         <div>
-            <Form.Select aria-label="Выберите жанр:" onChange={filterChange} class="btn" id="filter">
+		<h3>{loginTerm}</h3>
+            <Form.Select aria-label="Выберите жанр:" onChange={filterChange} className="btn" id="filter">
                 <option>Выберите жанр</option>
                 <ListGenres list={genres} />
             </Form.Select>
-            <input placeholder="Поиск по библиотеке:" class="w-65 m-2 alert alert-dark mt-3" id="search" type='text' onChange={handleChange}></input>
+		    <Form>
+		     <Form.Control className="w-65 m-2 alert alert-dark mt-3" id="login" onChange={loginChange}/>
+		</Form>
+            <input placeholder="Поиск по библиотеке:" className="w-65 m-2 alert alert-dark mt-3" id="search" type='text' onChange={searchChange}></input>
             <br /><br /><ListBooks list={searchCards} />
         </div>
     )
 }
+
 //Содержание сайта: авторы
 const user = {
     name: "Кенджи Сатоо",
@@ -105,7 +127,7 @@ const list = [
         author: "Валентин Катаев",
         count_like: 12367,
         count_pages: 4,
-        id: 1,
+        id: 2,
         annotation: "Про девочку, которая получила в подарок семь желаний! И очень глупо их растратила. И только последнее желание оказалось добрым и полезным. Очень мудрая история, пригодится не только детям, но и взрослым.",
         genre: "Русская сказка",
     },
@@ -114,7 +136,7 @@ const list = [
         author: "Шарль Перро",
         count_like: 12367,
         count_pages: 4,
-        id: 1,
+        id: 3,
         annotation: "Представьте себе, что почувствовал Жак, когда узнал, что его старшие братья получили в наследство мельницу и осла, а он - всего лишь кота. Вот только это необычный кот. И у кота есть гениальный план. Вместе с Жаком им предстоит пройти испытания, раскрывая тайны и отгадывая загадки, чтобы в конце получить долгожданную награду.",
         genre: "Французская сказка",
     },
@@ -138,25 +160,25 @@ const ListBooks = (props) => {
                     return <Col key={item.id} style={{ alignItems: 'center' }}>
                         <Card style={{ width: 'auto', background: '#f5d69d' }}>
                             <Card.Body>
-                                <div class="card_book">
-                                    <div class="book1"><Card.Title class="book1" style={{ display: 'inline-block' }}>{item.title}</Card.Title>
-                                        <svg style={{ display: 'inline-block', float: 'right' }} xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-book" viewBox="0 0 16 16">
+                                <div className="card_book">
+                                    <div className="book1"><Card.Title className="book1" style={{ display: 'inline-block' }}>{item.title}</Card.Title>
+                                        <svg style={{ display: 'inline-block', float: 'right' }} xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" className="bi bi-book" viewBox="0 0 16 16">
                                             <path d="M1 2.828c.885-.37 2.154-.769 3.388-.893 1.33-.134 2.458.063 3.112.752v9.746c-.935-.53-2.12-.603-3.213-.493-1.18.12-2.37.461-3.287.811V2.828zm7.5-.141c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492V2.687zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783z" />
                                         </svg>
                                     </div>
-                                    <div class="book2"><ListGroup.Item class="book2"><h4 style={{ fontWeight: "bold" }}>Аннотация:</h4>{item.annotation}</ListGroup.Item> </div>
-                                    <div class="book3"><ListGroup.Item class="book3"><h4 style={{ fontWeight: "bold" }}>Автор:</h4><h5>{item.author}</h5></ListGroup.Item>
+                                    <div className="book2"><ListGroup.Item className="book2"><h4 style={{ fontWeight: "bold" }}>Аннотация:</h4>{item.annotation}</ListGroup.Item> </div>
+                                    <div className="book3"><ListGroup.Item className="book3"><h4 style={{ fontWeight: "bold" }}>Автор:</h4><h5>{item.author}</h5></ListGroup.Item>
                                         <p style={{ borderStyle: "solid", borderLeft: 0, borderBottom: 0, borderRight: 0 }}>{item.genre}</p>
 
                                     </div>
-                                    <div class="book4"><ListGroup.Item class="book4">
-                                        <svg style={{ display: "block", margin: "auto", color: "#f26362" }} xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
-                                            <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z" />
+                                    <div className="book4"><ListGroup.Item className="book4">
+                                        <svg style={{ display: "block", margin: "auto", color: "#f26362" }} xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" className="bi bi-heart-fill" viewBox="0 0 16 16">
+                                            <path fillRule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z" />
                                         </svg>
                                         <br></br><p style={{ textAlign: "center", fontWeight: "bold", fontSize: "20px", borderStyle: "solid", borderLeft: 0, borderBottom: 0, borderRight: 0, paddingTop: "20px" }}>{item.count_like}</p></ListGroup.Item>
                                     </div>
-                                    <div class="book5"><ListGroup.Item class="book5">
-                                        <svg style={{ display: "block", margin: "auto" }} xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-journals" viewBox="0 0 16 16">
+                                    <div className="book5"><ListGroup.Item className="book5">
+                                        <svg style={{ display: "block", margin: "auto" }} xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" className="bi bi-journals" viewBox="0 0 16 16">
                                             <path d="M5 0h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2 2 2 0 0 1-2 2H3a2 2 0 0 1-2-2h1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1H1a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v9a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1H3a2 2 0 0 1 2-2z" />
                                             <path d="M1 6v-.5a.5.5 0 0 1 1 0V6h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V9h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 2.5v.5H.5a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1H2v-.5a.5.5 0 0 0-1 0z" />
                                         </svg>
@@ -173,8 +195,8 @@ const ListBooks = (props) => {
 //Профиль пользователя
 function Profile() {
     return (
-        <div class="m-3 text-center"><h2>{user.name}</h2>
-            <img class="mx-auto d-block"
+        <div className="m-3 text-center"><h2>{user.name}</h2>
+            <img className="mx-auto d-block"
                 src={user.imageUrl}
                 alt={user.name}
                 style={{
@@ -183,29 +205,29 @@ function Profile() {
                     border: "4mm ridge rgba(211, 220, 50, .6)",
                 }}
             />
-            <div class="container d-flex justify-content-center mt-4">
-                <div class="card p-3 py-4">
-                    <div class="text-center">
-                        <h3 class="mt-">{user.name}</h3>
-                        <span class="mt-1 clearfix">Писатель</span>
+            <div className="container d-flex justify-content-center mt-4">
+                <div className="card p-3 py-4">
+                    <div className="text-center">
+                        <h3 className="mt-">{user.name}</h3>
+                        <span className="mt-1 clearfix">Писатель</span>
 
-                        <div class="row mt-3 mb-3">
+                        <div className="row mt-3 mb-3">
 
-                            <div class="col-md-4">
-                                <h5 class="font-weight-bold fs-6">Всего</h5>
-                                <span class="num">{user.amount_book}</span>
+                            <div className="col-md-4">
+                                <h5 className="font-weight-bold fs-6">Всего</h5>
+                                <span className="num">{user.amount_book}</span>
                             </div>
-                            <div class="col-md-4">
-                                <h5 class="font-weight-bold fs-6">Завершено</h5>
-                                <span class="num">{user.completed}</span>
+                            <div className="col-md-4">
+                                <h5 className="font-weight-bold fs-6">Завершено</h5>
+                                <span className="num">{user.completed}</span>
                             </div>
-                            <div class="col-md-4">
-                                <h5 class="font-weight-bold fs-6">В процессе</h5>
-                                <span class="num">{user.in_process}</span>
+                            <div className="col-md-4">
+                                <h5 className="font-weight-bold fs-6">В процессе</h5>
+                                <span className="num">{user.in_process}</span>
                             </div>
                         </div>
-                        <hr class="line" />
-                        <small class="mt-4">{user.about_user}</small>
+                        <hr className="line" />
+                        <small className="mt-4">{user.about_user}</small>
                     </div>
                 </div>
             </div>
